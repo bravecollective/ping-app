@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Brave Collective - Login with EVE SSO</title>
+    <link rel="stylesheet" href="/assets/bravecollective/web-ui/css/brave.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col col-lg-6">
+                <h1 class="display-4 text-light">{{serviceName}}</h1>
+
+            </div>
+            <div class="col col-lg-6 text-right">
+                <a class="btn btn-warning" href="/logout">Logout</a>
+            </div>
+        </div>
+
+
+        <div class="jumbotron mt-5 text-light bg-dark-4">
+            <form action="/ping/send" method="post">
+
+                <div class="row justify-content-center">
+                <div class="col col-lg-5">
+                    <div class="alert alert-warning">
+                        If you send <strong>bad pings</strong> you <strong>will be banned from sending pings.</strong>.
+                        Use the template, if possible. <strong>Also, don't spam newlines and emoji in your pings or
+                        you'll have your ping rights revoked.</strong>
+                        Make sure you send your pings to the correct group.
+                        Some groups are meant for emergencies, don't randomly ping them.<br>
+                        <strong>Just use it responsibly.</strong>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="text-light" for="ping-index-group">Ping to group:</label>
+                        <select class="form-control bg-white" id="ping-index-group" name="group">{{groups}}</select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Send Ping</button>
+                </div>
+                <div class="col col-lg-6">
+                    <div class="form-group">
+                        <textarea id="ping-index-text" rows="10" name="text" class="form-control bg-white">
+Fleet Name:
+FC:
+BRAVE Mumble, Channel:
+Ship Types:
+Location:
+Duration:
+Reimbursable:
+Why:</textarea>
+                    </div>
+                </div>
+            </div>
+            </form>
+        </div>
+        <footer class="navbar navbar-dark bg-brave shadow-1">
+            <div class="align-self-center">Brave Collective Services. For support write to support@bravecollective.freshdesk.com or ask in the ingame channel "Brave IT".</div>
+        </footer>
+    </div>
+</body>
+</html>

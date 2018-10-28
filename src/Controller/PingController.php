@@ -1,0 +1,128 @@
+<?php
+namespace Brave\PingApp\Controller;
+
+use Brave\PingApp\Entity\Ping;
+use Brave\PingApp\Repository\PingRepository;
+use Brave\PingApp\Security;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use GuzzleHttp\Client;
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
+/**
+ *
+ */
+class PingController
+{
+    /**
+     * ContainerInterface
+     *
+     * @var ContainerInterface
+     */
+    protected $container;
+
+    /**
+     * @var Security
+     */
+    protected $security;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+        $this->security = $container->get(Security::class);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @param array $arguments
+     * @return ResponseInterface
+     */
+    public function index(ServerRequestInterface $request, ResponseInterface $response, $arguments)
+    {
+        $serviceName = isset($this->container->get('settings')['brave.serviceName']) ? $this->container->get('settings')['brave.serviceName'] : 'Brave Service';
+
+        $allPingGroups = $this->security->getAllowedPingGroups();
+
+        $pingGroupOptions = implode("\n", array_map(function ($groupName) {
+            return '<option>' . $groupName . '</option>';
+        }, $allPingGroups));
+
+        $templateCode = file_get_contents(__DIR__ . '/../../html/ping/index.html');
+
+        $body = str_replace([
+            '{{serviceName}}',
+            '{{groups}}',
+        ], [
+            $serviceName,
+            $pingGroupOptions
+        ], $templateCode);
+
+        return $response->getBody()->write($body);
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     */
+    public function send(ServerRequestInterface $request, ResponseInterface $response)
+    {
+        $characterName = $this->security->getAuthorizedName();
+        $parsedBody = $request->getParsedBody();
+
+        $ping = new Ping();
+        $ping->text = $parsedBody['text'];
+        $ping->group = $parsedBody['group'];
+        $ping->character = $characterName;
+
+        $allPingGroups = $this->security->getAllowedPingGroups();
+        if (!in_array($ping->group, $allPingGroups)) {
+            return $response->withStatus(403);
+        }
+
+        /** @var EntityManager $em */
+        $em = $this->container->get(EntityManagerInterface::class);
+        $em->persist($ping);
+        $em->flush();
+
+        $this->sendPingToSlack($ping);
+
+        return $response->withRedirect('/ping/new', 301);
+    }
+
+    private function sendPingToSlack(Ping $ping)
+    {
+        $guzzleClient = new Client([
+            'base_uri' => 'https://brave-collective.slack.com/services/hooks/slackbot'
+        ]);
+
+        $token = $this->container->get('settings')['SLACK_TOKEN'];
+        $channelName = $this->getPingChannel($ping->group);
+
+        $pingText = sprintf("channel %s PING by %s : \n", $ping->group, $ping->character) . $ping->text;
+
+        $guzzleClient->request('POST', '?token=' . $token . '&channel=' . $channelName, [
+            'body' => $pingText
+        ]);
+    }
+
+    /**
+     * @param $pingGroup
+     * @return string
+     * @throws \Exception
+     */
+    private function getPingChannel($pingGroup)
+    {
+        $mapping = $this->container->get('settings')['channelMapping'];
+
+        if (!isset($mapping[$pingGroup])) {
+            throw new \Exception('Could not map ping group to channel.');
+        }
+
+        return $mapping[$pingGroup];
+    }
+}
