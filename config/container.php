@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'settings' => require_once('config.php'),
+    'settings' => isset($_SERVER['APP_CONFIG_FILEPATH']) ? require_once($_SERVER['APP_CONFIG_FILEPATH']) : require_once('config.php'),
 
     \Slim\App::class => function (\Psr\Container\ContainerInterface $container)
     {
