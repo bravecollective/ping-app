@@ -103,7 +103,7 @@ class PingController
         $token = $this->container->get('settings')['SLACK_TOKEN'];
         $channelName = $this->getPingChannel($ping->group);
 
-        $pingText = sprintf("channel %s PING by %s : \n", $ping->group, $ping->character) . $ping->text;
+        $pingText = sprintf("@channel %s PING by %s : \n", $ping->group, $ping->character) . $ping->text;
 
         $guzzleClient->request('POST', '?token=' . $token . '&channel=' . $channelName, [
             'body' => $pingText
