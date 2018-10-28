@@ -4,3 +4,8 @@ web/assets
 config/config.php
 
 /.idea
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
