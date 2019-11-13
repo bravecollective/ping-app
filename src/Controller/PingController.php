@@ -47,9 +47,10 @@ class PingController
         $serviceName = isset($this->container->get('settings')['brave.serviceName']) ? $this->container->get('settings')['brave.serviceName'] : 'Brave Service';
 
         $allPingGroups = $this->security->getAllowedPingGroups();
+        $channelMap = $this->container->get('settings')['channelMapping'];
 
-        $pingGroupOptions = implode("\n", array_map(function ($groupName) {
-            return '<option>' . $groupName . '</option>';
+        $pingGroupOptions = implode("\n", array_map(function ($groupName) use ($channelMap) {
+            return '<option>' . $groupName . ' (#'. $channelMap[$groupName] .')</option>';
         }, $allPingGroups));
 
         $templateCode = file_get_contents(__DIR__ . '/../../html/ping/index.html');
