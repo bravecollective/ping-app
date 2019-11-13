@@ -50,7 +50,7 @@ class PingController
         $channelMap = $this->container->get('settings')['channelMapping'];
 
         $pingGroupOptions = implode("\n", array_map(function ($groupName) use ($channelMap) {
-            return '<option>' . $groupName . ' (#'. $channelMap[$groupName] .')</option>';
+            return '<option value="' . $groupName . '">' . $groupName . ' (#'. $channelMap[$groupName] .')</option>';
         }, $allPingGroups));
 
         $templateCode = file_get_contents(__DIR__ . '/../../html/ping/index.html');
