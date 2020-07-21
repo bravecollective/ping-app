@@ -58,9 +58,11 @@ class PingController
         $body = str_replace([
             '{{serviceName}}',
             '{{groups}}',
+            '{{templates}}',
         ], [
             $serviceName,
-            $pingGroupOptions
+            $pingGroupOptions,
+            htmlspecialchars(json_encode($this->container->get('settings')['templates'])),
         ], $templateCode);
 
         return $response->getBody()->write($body);

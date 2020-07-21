@@ -43,16 +43,8 @@
                 </div>
                 <div class="col col-lg-6">
                     <div class="form-group">
-                        <textarea id="ping-index-text" rows="10" name="text" class="form-control bg-white">
-Fleet Name:
-FC:
-BRAVE Mumble, Channel:
-Ship Types:
-Location:
-When:
-Duration:
-SRP Type: <None, Fun, Casual, Stratop, CTA>
-Why:</textarea>
+                        <textarea id="ping-index-text" rows="10" name="text" class="form-control bg-white"
+                                  data-templates="{{templates}}"></textarea>
                     </div>
                 </div>
             </div>
@@ -62,5 +54,30 @@ Why:</textarea>
             <div class="align-self-center">Brave Collective Services. For support write to support@bravecollective.freshdesk.com or ask in the ingame channel "Brave IT".</div>
         </footer>
     </div>
+    <script type="text/javascript" src="/assets/bravecollective/web-ui/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        window.$(function() {
+            window.$('#ping-index-group').on('change', groupOnChange);
+            window.$('#ping-index-group').change();
+        });
+
+        function groupOnChange(event) {
+            const $template = window.$('#ping-index-text');
+            const data = $template.data('templates');
+            const selectedGroup = window.$(event.target).val();
+            const defaultTemplate = data['__default'];
+            let foundTemplate = false;
+            for (const configKey in data) {
+                if (data.hasOwnProperty(configKey) && configKey === selectedGroup) {
+                    foundTemplate = true;
+                    $template.val(data[configKey]);
+                    break;
+                }
+            }
+            if (! foundTemplate) {
+                $template.val(defaultTemplate);
+            }
+        }
+    </script>
 </body>
 </html>

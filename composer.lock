@@ -82,17 +82,21 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bravecollective/web-ui.git",
-                "reference": "4f1d8ef98ac4137b7988d2d21587fb4953b92d71"
+                "reference": "92d8877358286550a630beac0257042f3c7df82b"
             },
             "type": "library",
             "extra": {
                 "assets-files": [
                     "dist/images",
                     "dist/css",
-                    "dist/js"
+                    "dist/js",
+                    "dist/pickadate"
                 ]
             },
-            "time": "2018-09-11T18:41:26+00:00"
+            "license": [
+                "MIT"
+            ],
+            "time": "2019-09-29T12:58:02+00:00"
         },
         {
             "name": "bryanjhv/slim-session",
@@ -172,6 +176,7 @@
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
             "homepage": "https://github.com/container-interop/container-interop",
+            "abandoned": "psr/container",
             "time": "2017-02-14T19:40:03+00:00"
         },
         {
@@ -703,12 +708,12 @@
             "version": "v2.5.14",
             "source": {
                 "type": "git",
-                "url": "https://github.com/doctrine/doctrine2.git",
+                "url": "https://github.com/doctrine/orm.git",
                 "reference": "810a7baf81462a5ddf10e8baa8cb94b6eec02754"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/810a7baf81462a5ddf10e8baa8cb94b6eec02754",
+                "url": "https://api.github.com/repos/doctrine/orm/zipball/810a7baf81462a5ddf10e8baa8cb94b6eec02754",
                 "reference": "810a7baf81462a5ddf10e8baa8cb94b6eec02754",
                 "shasum": ""
             },
@@ -1712,5 +1717,6 @@
     "platform-dev": [],
     "platform-overrides": {
         "php": "5.6.0"
-    }
+    },
+    "plugin-api-version": "1.1.0"
 }

@@ -25,6 +25,7 @@
     }
     ],
     "require": {
+        "ext-json": "*",
         "frontpack/composer-assets-plugin": "^0.9",
         "bravecollective/neucore-api": "*@dev",
         "bravecollective/sso-basics": "*@dev",
