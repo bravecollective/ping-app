@@ -34,7 +34,7 @@ class AuthenticationController extends BasicAuthenticationController
     public function callback(ServerRequestInterface $request, Response $response, array $arguments): ResponseInterface
     {
         try {
-            parent::auth($request, $response, $arguments);
+            parent::auth($request, $response, false);
         } catch (\Exception $e) {
             error_log((string)$e);
         }

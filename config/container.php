@@ -1,18 +1,33 @@
 <?php
 
-return [
-    'settings' => isset($_SERVER['APP_CONFIG_FILEPATH']) ? require_once($_SERVER['APP_CONFIG_FILEPATH']) : require_once('config.php'),
+use Brave\NeucoreApi\Api\ApplicationApi;
+use Brave\PingApp\Entity\Ping;
+use Brave\PingApp\Repository\PingRepository;
+use Brave\PingApp\RoleProvider;
+use Brave\PingApp\Security;
+use Brave\Sso\Basics\AuthenticationProvider;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Setup;
+use League\OAuth2\Client\Provider\GenericProvider;
+use Psr\Container\ContainerInterface;
+use Slim\App;
 
-    \Slim\App::class => function (\Psr\Container\ContainerInterface $container)
+return [
+    'settings' => isset($_SERVER['APP_CONFIG_FILEPATH']) ?
+        require_once($_SERVER['APP_CONFIG_FILEPATH']) :
+        require_once('config.php'),
+
+    App::class => function (ContainerInterface $container)
     {
         return new Slim\App($container);
     },
 
-    \League\OAuth2\Client\Provider\GenericProvider::class => function (\Psr\Container\ContainerInterface $container)
+    GenericProvider::class => function (ContainerInterface $container)
     {
         $settings = $container->get('settings');
 
-        return new \League\OAuth2\Client\Provider\GenericProvider([
+        return new GenericProvider([
             'clientId' => $settings['SSO_CLIENT_ID'],
             'clientSecret' => $settings['SSO_CLIENT_SECRET'],
             'redirectUri' => $settings['SSO_REDIRECTURI'],
@@ -22,25 +37,25 @@ return [
         ]);
     },
 
-    \Brave\Sso\Basics\AuthenticationProvider::class => function (\Psr\Container\ContainerInterface $container)
+    AuthenticationProvider::class => function (ContainerInterface $container)
     {
         $settings = $container->get('settings');
 
-        return new \Brave\Sso\Basics\AuthenticationProvider(
-            $container->get(\League\OAuth2\Client\Provider\GenericProvider::class),
+        return new AuthenticationProvider(
+            $container->get(GenericProvider::class),
             explode(' ', $settings['SSO_SCOPES'])
         );
     },
 
-    \Brave\PingApp\SessionHandler::class => function (\Psr\Container\ContainerInterface $container) {
+    \Brave\PingApp\SessionHandler::class => function (ContainerInterface $container) {
         return new \Brave\PingApp\SessionHandler($container);
     },
 
-    \Brave\Sso\Basics\SessionHandlerInterface::class => function (\Psr\Container\ContainerInterface $container) {
+    \Brave\Sso\Basics\SessionHandlerInterface::class => function (ContainerInterface $container) {
         return $container->get(\Brave\PingApp\SessionHandler::class);
     },
 
-    \Brave\NeucoreApi\Api\ApplicationApi::class => function (\Psr\Container\ContainerInterface $container) {
+    ApplicationApi::class => function (ContainerInterface $container) {
         $apiKey = base64_encode(
             $container->get('settings')['CORE_APP_ID'] .
             ':'.
@@ -48,43 +63,41 @@ return [
         );
         $config = Brave\NeucoreApi\Configuration::getDefaultConfiguration();
         $config->setHost($container->get('settings')['CORE_URL']);
-        $config->setApiKey('Authorization', $apiKey);
+        $config->setAccessToken($apiKey);
         $config->setApiKeyPrefix('Authorization', 'Bearer');
 
         return new Brave\NeucoreApi\Api\ApplicationApi(null, $config);
     },
 
-    \Brave\PingApp\RoleProvider::class => function (\Psr\Container\ContainerInterface $container) {
-        return new \Brave\PingApp\RoleProvider(
-            $container->get(\Brave\NeucoreApi\Api\ApplicationApi::class),
+    RoleProvider::class => function (ContainerInterface $container) {
+        return new RoleProvider(
+            $container->get(ApplicationApi::class),
             $container->get(\Brave\Sso\Basics\SessionHandlerInterface::class)
         );
     },
 
-    \Doctrine\ORM\EntityManagerInterface::class => function (\Psr\Container\ContainerInterface $container) {
-        $config = \Doctrine\ORM\Tools\Setup::createAnnotationMetadataConfiguration(
+    EntityManagerInterface::class => function (ContainerInterface $container) {
+        $config = Setup::createAnnotationMetadataConfiguration(
             [ROOT_DIR . '/src/Entity'],
             true
         );
-        $em = \Doctrine\ORM\EntityManager::create(
+        return EntityManager::create(
             ['url' => $container->get('settings')['DB_URL']],
             $config
         );
-
-        return $em;
     },
 
-    \Brave\PingApp\Repository\PingRepository::class => function (\Psr\Container\ContainerInterface $container) {
-        $em = $container->get(\Doctrine\ORM\EntityManagerInterface::class);
-        $class = $em->getMetadataFactory()->getMetadataFor(\Brave\PingApp\Entity\Ping::class);
+    PingRepository::class => function (ContainerInterface $container) {
+        $em = $container->get(EntityManagerInterface::class);
+        $class = $em->getMetadataFactory()->getMetadataFor(Ping::class);
 
-        return new \Brave\PingApp\Repository\PingRepository($em, $class);
+        return new PingRepository($em, $class);
     },
 
-    \Brave\PingApp\Security::class => function (\Psr\Container\ContainerInterface $container) {
-        return new \Brave\PingApp\Security(
+    Security::class => function (ContainerInterface $container) {
+        return new Security(
             $container->get('settings')['pingMapping'],
-            $container->get(\Brave\PingApp\RoleProvider::class),
+            $container->get(RoleProvider::class),
             $container->get(\Brave\Sso\Basics\SessionHandlerInterface::class)
         );
     },
