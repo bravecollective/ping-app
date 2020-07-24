@@ -68,7 +68,6 @@
             const $template = window.$('#ping-index-text');
             const data = $template.data('templates');
             const selectedGroup = window.$(event.target).val();
-            const defaultTemplate = data['__default'];
             let foundTemplate = false;
             for (const configKey in data) {
                 if (data.hasOwnProperty(configKey) && configKey === selectedGroup) {
@@ -78,7 +77,7 @@
                 }
             }
             if (! foundTemplate) {
-                $template.val(defaultTemplate);
+                $template.val(data['__default']);
             }
         }
     </script>

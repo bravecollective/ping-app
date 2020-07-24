@@ -37,5 +37,9 @@ return [
         'Social' => 'pings-social',
         'Diplos' => 'diplo',
         'Announcement' => 'announcements'
-    ]
+    ],
+
+    'templates' => [
+        '__default' => '',
+    ],
 ];
