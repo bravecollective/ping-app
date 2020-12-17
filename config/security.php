@@ -7,5 +7,5 @@
 return [
     '/login' => [\Brave\PingApp\RoleProvider::ROLE_ANY],
     '/auth' => [\Brave\PingApp\RoleProvider::ROLE_ANY],
-    '/ping' => ['member'],
+    '/ping' => ['member', 'legacy-coalition'],
 ];
