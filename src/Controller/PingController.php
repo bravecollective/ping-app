@@ -66,9 +66,6 @@ class PingController
         return $response;
     }
 
-    /**
-     * @throws GuzzleException
-     */
     public function send(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $characterName = $this->security->getAuthorizedName();
@@ -87,9 +84,17 @@ class PingController
         $this->em->persist($ping);
         $this->em->flush();
 
-        $this->sendPingToSlack($ping);
+        $success = true;
+        try {
+            $this->sendPingToSlack($ping);
+        } catch (GuzzleException | Exception $e) {
+            error_log((string)$e);
+            $success = false;
+        }
 
-        return $response->withHeader('Location', '/ping/new')->withStatus(301);
+        return $response
+            ->withHeader('Location', '/ping/new' . ($success ? '#ping-sent' : ''))
+            ->withStatus(301);
     }
 
     /**

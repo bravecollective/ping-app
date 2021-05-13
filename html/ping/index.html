@@ -5,6 +5,11 @@
     <meta charset="UTF-8">
     <title>Brave Collective - Login with EVE SSO</title>
     <link rel="stylesheet" href="/assets/bravecollective/web-ui/css/brave.css">
+    <style>
+        #alert-ping-sent {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -19,9 +24,19 @@
         </div>
 
         <div class="jumbotron mt-5 text-light bg-dark-4">
-            <form action="/ping/send" method="post">
+            <div class="row justify-content-center">
+                <div class="col">
+                    <div id="alert-ping-sent" class="alert alert-success alert-dismissible fade show" role="alert">
+                        Ping sent successfully.
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-                <div class="row justify-content-center">
+            <form action="/ping/send" method="post">
+            <div class="row justify-content-center">
                 <div class="col col-lg-5">
                     <div class="alert alert-warning">
                         If you send <strong>bad pings</strong> you <strong>will be banned from sending pings.</strong>.
@@ -49,6 +64,7 @@
             </div>
             </form>
         </div>
+
         <footer class="navbar navbar-dark bg-brave shadow-1">
             <div class="align-self-center">
                 Brave Collective Services. For support write to support@bravecollective.freshdesk.com or
@@ -56,12 +72,22 @@
             </div>
         </footer>
     </div>
+
     <script type="text/javascript" src="/assets/bravecollective/web-ui/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/assets/bravecollective/web-ui/js/bootstrap.min.js"></script>
     <script type="text/javascript">
         window.$(function() {
             window.$('#ping-index-group').on('change', groupOnChange);
             window.$('#ping-index-group').change();
+            showSuccess();
         });
+
+        function showSuccess() {
+            if (window.location.hash === '#ping-sent') {
+                window.$('#alert-ping-sent').show();
+                window.location.hash = '';
+            }
+        }
 
         function groupOnChange(event) {
             const $template = window.$('#ping-index-text');
@@ -75,7 +101,7 @@
                     break;
                 }
             }
-            if (! foundTemplate) {
+            if (!foundTemplate) {
                 $template.val(data['__default']);
             }
         }
