@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "81f23ec4de83ee7f98cdefe7c07c3fd5",
+    "content-hash": "fe87fcae8979f0797308e603a759095f",
     "packages": [
         {
             "name": "bravecollective/neucore-api",
@@ -59,57 +59,6 @@
                 "sdk"
             ],
             "time": "2021-05-09T19:59:52+00:00"
-        },
-        {
-            "name": "bravecollective/sso-basics",
-            "version": "3.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/bravecollective/sso-basics.git",
-                "reference": "81627c49516d1b6b1e3e5664e5263403545b2a90"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/bravecollective/sso-basics/zipball/81627c49516d1b6b1e3e5664e5263403545b2a90",
-                "reference": "81627c49516d1b6b1e3e5664e5263403545b2a90",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "guzzlehttp/guzzle": "^6.3",
-                "league/oauth2-client": "^2.2",
-                "paragonie/random_compat": "^2|^9.99",
-                "php": "^7.2",
-                "psr/container": "^1.0",
-                "psr/http-message": "^1.0",
-                "web-token/jwt-key-mgmt": "^2.0",
-                "web-token/jwt-signature": "^2.0",
-                "web-token/jwt-signature-algorithm-ecdsa": "^2.0",
-                "web-token/jwt-signature-algorithm-hmac": "^2.0",
-                "web-token/jwt-signature-algorithm-rsa": "^2.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^8.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Brave\\Sso\\Basics\\": "src",
-                    "Test\\": "tests"
-                }
-            },
-            "scripts": {
-                "test": [
-                    "phpunit"
-                ],
-                "test:coverage": [
-                    "phpunit --coverage-html coverage"
-                ]
-            },
-            "license": [
-                "MIT"
-            ],
-            "time": "2019-10-13T23:08:07+00:00"
         },
         {
             "name": "bravecollective/web-ui",
@@ -304,28 +253,30 @@
         },
         {
             "name": "doctrine/annotations",
-            "version": "1.12.1",
+            "version": "1.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/annotations.git",
-                "reference": "b17c5014ef81d212ac539f07a1001832df1b6d3b"
+                "reference": "03cb2123a67d4be806554fe670d0adc298199808"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/annotations/zipball/b17c5014ef81d212ac539f07a1001832df1b6d3b",
-                "reference": "b17c5014ef81d212ac539f07a1001832df1b6d3b",
+                "url": "https://api.github.com/repos/doctrine/annotations/zipball/03cb2123a67d4be806554fe670d0adc298199808",
+                "reference": "03cb2123a67d4be806554fe670d0adc298199808",
                 "shasum": ""
             },
             "require": {
                 "doctrine/lexer": "1.*",
                 "ext-tokenizer": "*",
-                "php": "^7.1 || ^8.0"
+                "php": "^7.1 || ^8.0",
+                "psr/cache": "^1 || ^2 || ^3"
             },
             "require-dev": {
-                "doctrine/cache": "1.*",
+                "doctrine/cache": "^1.11 || ^2.0",
                 "doctrine/coding-standard": "^6.0 || ^8.1",
                 "phpstan/phpstan": "^0.12.20",
-                "phpunit/phpunit": "^7.5 || ^9.1.5"
+                "phpunit/phpunit": "^7.5 || ^9.1.5",
+                "symfony/cache": "^4.4 || ^5.2"
             },
             "type": "library",
             "autoload": {
@@ -366,7 +317,7 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2021-02-21T21:00:45+00:00"
+            "time": "2021-04-29T07:39:39+00:00"
         },
         {
             "name": "doctrine/cache",
@@ -1749,6 +1700,52 @@
             "time": "2018-01-21T07:42:36+00:00"
         },
         {
+            "name": "psr/cache",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/cache.git",
+                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/cache/zipball/d11b50ad223250cf17b86e38383413f5a6764bf8",
+                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Cache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for caching libraries",
+            "keywords": [
+                "cache",
+                "psr",
+                "psr-6"
+            ],
+            "time": "2016-08-06T20:24:11+00:00"
+        },
+        {
             "name": "psr/container",
             "version": "1.1.1",
             "source": {
@@ -2749,6 +2746,48 @@
                 }
             ],
             "time": "2020-07-06T13:19:58+00:00"
+        },
+        {
+            "name": "tkhamez/eve-sso",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tkhamez/eve-sso-php.git",
+                "reference": "5a5c084fe949355da1e5b7297bac06593b829095"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tkhamez/eve-sso-php/zipball/5a5c084fe949355da1e5b7297bac06593b829095",
+                "reference": "5a5c084fe949355da1e5b7297bac06593b829095",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "guzzlehttp/guzzle": "^6.3",
+                "league/oauth2-client": "^2.2",
+                "paragonie/random_compat": "^2|^9.99",
+                "php": "^7.2",
+                "web-token/jwt-key-mgmt": "^2.0",
+                "web-token/jwt-signature": "^2.0",
+                "web-token/jwt-signature-algorithm-ecdsa": "^2.0",
+                "web-token/jwt-signature-algorithm-hmac": "^2.0",
+                "web-token/jwt-signature-algorithm-rsa": "^2.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Eve\\Sso\\": "src",
+                    "Test\\": "tests"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "time": "2020-06-22T16:59:16+00:00"
         },
         {
             "name": "tkhamez/slim-role-auth",

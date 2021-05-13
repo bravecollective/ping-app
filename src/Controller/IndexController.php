@@ -2,22 +2,22 @@
 
 namespace Brave\PingApp\Controller;
 
-use Brave\Sso\Basics\EveAuthentication;
-use Brave\Sso\Basics\SessionHandlerInterface;
+use Eve\Sso\EveAuthentication;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use SlimSession\Helper;
 
 class IndexController
 {
     /**
-     * @var SessionHandlerInterface
+     * @var Helper
      */
     private $sessionData;
 
     public function __construct(ContainerInterface $container)
     {
-        $this->sessionData = $container->get(SessionHandlerInterface::class);
+        $this->sessionData = $container->get(Helper::class);
     }
 
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface

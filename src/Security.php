@@ -2,8 +2,8 @@
 
 namespace Brave\PingApp;
 
-use Brave\Sso\Basics\EveAuthentication;
-use Brave\Sso\Basics\SessionHandlerInterface;
+use Eve\Sso\EveAuthentication;
+use SlimSession\Helper;
 
 class Security
 {
@@ -13,7 +13,7 @@ class Security
     private $roleProvider;
 
     /**
-     * @var SessionHandlerInterface
+     * @var Helper
      */
     private $session;
 
@@ -22,7 +22,7 @@ class Security
      */
     private $pingMapping;
 
-    public function __construct(array $pingMapping, RoleProvider $roleProvider, SessionHandlerInterface $session)
+    public function __construct(array $pingMapping, RoleProvider $roleProvider, Helper $session)
     {
         $this->pingMapping = $pingMapping;
         $this->roleProvider = $roleProvider;

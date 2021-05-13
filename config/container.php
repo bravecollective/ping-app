@@ -5,13 +5,14 @@ use Brave\PingApp\Entity\Ping;
 use Brave\PingApp\Repository\PingRepository;
 use Brave\PingApp\RoleProvider;
 use Brave\PingApp\Security;
-use Brave\Sso\Basics\AuthenticationProvider;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Setup;
+use Eve\Sso\AuthenticationProvider;
 use League\OAuth2\Client\Provider\GenericProvider;
 use Psr\Container\ContainerInterface;
 use Slim\App;
+use SlimSession\Helper;
 
 /** @noinspection PhpIncludeInspection */
 return [
@@ -32,7 +33,7 @@ return [
             'redirectUri' => $settings['SSO_REDIRECTURI'],
             'urlAuthorize' => $settings['SSO_URL_AUTHORIZE'],
             'urlAccessToken' => $settings['SSO_URL_ACCESSTOKEN'],
-            'urlResourceOwnerDetails' => $settings['SSO_URL_RESOURCEOWNERDETAILS'],
+            'urlResourceOwnerDetails' => '',
         ]);
     },
 
@@ -41,16 +42,13 @@ return [
 
         return new AuthenticationProvider(
             $container->get(GenericProvider::class),
-            explode(' ', $settings['SSO_SCOPES'])
+            explode(' ', $settings['SSO_SCOPES']),
+            $settings['SSO_URL_JWKS']
         );
     },
 
-    \Brave\PingApp\SessionHandler::class => function (ContainerInterface $container) {
-        return new \Brave\PingApp\SessionHandler($container);
-    },
-
-    \Brave\Sso\Basics\SessionHandlerInterface::class => function (ContainerInterface $container) {
-        return $container->get(\Brave\PingApp\SessionHandler::class);
+    Helper::class => function () {
+        return new Helper();
     },
 
     ApplicationGroupsApi::class => function (ContainerInterface $container) {
@@ -70,7 +68,7 @@ return [
     RoleProvider::class => function (ContainerInterface $container) {
         return new RoleProvider(
             $container->get(ApplicationGroupsApi::class),
-            $container->get(\Brave\Sso\Basics\SessionHandlerInterface::class)
+            $container->get(Helper::class)
         );
     },
 
@@ -96,7 +94,7 @@ return [
         return new Security(
             $container->get('settings')['pingMapping'],
             $container->get(RoleProvider::class),
-            $container->get(\Brave\Sso\Basics\SessionHandlerInterface::class)
+            $container->get(Helper::class)
         );
     },
 ];

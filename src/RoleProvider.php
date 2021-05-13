@@ -4,9 +4,9 @@ namespace Brave\PingApp;
 
 use Brave\NeucoreApi\Api\ApplicationGroupsApi;
 use Brave\NeucoreApi\ApiException;
-use Brave\Sso\Basics\EveAuthentication;
-use Brave\Sso\Basics\SessionHandlerInterface;
+use Eve\Sso\EveAuthentication;
 use Psr\Http\Message\ServerRequestInterface;
+use SlimSession\Helper;
 use Tkhamez\Slim\RoleAuth\RoleProviderInterface;
 
 /**
@@ -25,11 +25,11 @@ class RoleProvider implements RoleProviderInterface
     private $api;
 
     /**
-     * @var SessionHandlerInterface
+     * @var Helper
      */
     private $session;
 
-    public function __construct(ApplicationGroupsApi $api, SessionHandlerInterface $session)
+    public function __construct(ApplicationGroupsApi $api, Helper $session)
     {
         $this->api = $api;
         $this->session = $session;
