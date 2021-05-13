@@ -17,8 +17,8 @@ return [
     // App
     'brave.serviceName' => 'Brave Pings',
 
-    // SLACKBOT access token
-    'SLACK_TOKEN' => '',
+    // SLACKBOT access token - see https://your-name.slack.com/apps/A0F81R8ET-slackbot
+    'SLACKBOT_URL' => 'https://your-name.slack.com/services/hooks/slackbot?token=ABC123',
 
     // NEUCORE
     'CORE_URL' => 'https://account.bravecollective.com/api',

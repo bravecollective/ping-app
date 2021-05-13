@@ -99,16 +99,12 @@ class PingController
 
     private function sendPingToSlack(Ping $ping)
     {
-        $guzzleClient = new Client([
-            'base_uri' => 'https://brave-collective.slack.com/services/hooks/slackbot'
-        ]);
-
-        $token = $this->container->get('settings')['SLACK_TOKEN'];
+        $url = $this->container->get('settings')['SLACKBOT_URL'];
         $channelName = $this->getPingChannel($ping->group);
+        $pingText = "@channel PING \n\n" . $ping->text . $this->getPingMetadata($ping);
 
-        $pingText = sprintf("@channel PING \n\n", $ping->group, $ping->character) . $ping->text . $this->getPingMetadata($ping);
-
-        $guzzleClient->request('POST', '?token=' . $token . '&channel=' . $channelName, [
+        $guzzleClient = new Client();
+        $guzzleClient->request('POST', $url . '&channel=' . $channelName, [
             'body' => $pingText
         ]);
     }
