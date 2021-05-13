@@ -11,7 +11,10 @@ use Doctrine\ORM\Tools\Setup;
 use Eve\Sso\AuthenticationProvider;
 use League\OAuth2\Client\Provider\GenericProvider;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\App;
+use Slim\Factory\AppFactory;
+use Slim\Psr7\Factory\ResponseFactory;
 use SlimSession\Helper;
 
 /** @noinspection PhpIncludeInspection */
@@ -21,7 +24,11 @@ return [
         require_once 'config.php',
 
     App::class => function (ContainerInterface $container) {
-        return new Slim\App($container);
+        return AppFactory::createFromContainer($container);
+    },
+
+    ResponseFactoryInterface::class => function () {
+        return new ResponseFactory();
     },
 
     GenericProvider::class => function (ContainerInterface $container) {

@@ -2,10 +2,12 @@
 
 namespace Brave\PingApp;
 
+use DI\ContainerBuilder;
+use Exception;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\App;
-use Slim\Container;
 use Slim\Middleware\Session;
 use Tkhamez\Slim\RoleAuth\RoleMiddleware;
 use Tkhamez\Slim\RoleAuth\SecureRouteMiddleware;
@@ -17,10 +19,14 @@ class Bootstrap
      */
     protected $container;
 
+    /**
+     * @throws Exception
+     */
     public function __construct()
     {
-        $container = new Container(require_once(ROOT_DIR . '/config/container.php'));
-        $this->container = $container;
+        $containerBuilder = new ContainerBuilder();
+        $containerBuilder->addDefinitions(require_once(ROOT_DIR . '/config/container.php'));
+        $this->container = $containerBuilder->build();
     }
 
     public function getContainer(): ContainerInterface
@@ -37,7 +43,11 @@ class Bootstrap
         $routesConfigurator = require_once(ROOT_DIR . '/config/routes.php');
         $app = $routesConfigurator($this->container);
 
-        $app->add(new SecureRouteMiddleware(include ROOT_DIR . '/config/security.php', ['redirect_url' => '/login']));
+        $app->add(new SecureRouteMiddleware(
+            $this->container->get(ResponseFactoryInterface::class),
+            include ROOT_DIR . '/config/security.php',
+            ['redirect_url' => '/login']
+        ));
         $app->add(new RoleMiddleware($this->container->get(RoleProvider::class)));
 
         $app->add(new Session([
@@ -45,6 +55,9 @@ class Bootstrap
             'autorefresh' => true,
             'lifetime' => '1 hour'
         ]));
+
+        $app->addRoutingMiddleware();
+        $app->addErrorMiddleware(false, true, true);
 
         return $app;
     }

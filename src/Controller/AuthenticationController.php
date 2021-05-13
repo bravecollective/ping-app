@@ -9,7 +9,6 @@ use Exception;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Http\Response;
 use SlimSession\Helper;
 
 class AuthenticationController
@@ -75,7 +74,7 @@ class AuthenticationController
         return $response;
     }
 
-    public function callback(ServerRequestInterface $request, Response $response): ResponseInterface
+    public function callback(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $queryParameters = $request->getQueryParams();
 
@@ -95,14 +94,14 @@ class AuthenticationController
 
         $this->roleProvider->clear();
 
-        return $response->withRedirect('/ping/new');
+        return $response->withHeader('Location', '/ping/new');
     }
 
     /** @noinspection PhpUnusedParameterInspection */
-    public function logout(ServerRequestInterface $request, Response $response): ResponseInterface
+    public function logout(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $this->sessionHandler->clear();
 
-        return $response->withRedirect('/login');
+        return $response->withHeader('Location', '/login');
     }
 }

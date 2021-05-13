@@ -18,12 +18,15 @@
         "ext-json": "*",
         "bravecollective/neucore-api": "^1.0",
         "bravecollective/web-ui": "*@dev",
-        "bryanjhv/slim-session": "^3.5",
+        "bryanjhv/slim-session": "^4.1",
         "doctrine/dbal": "^2.10",
         "doctrine/orm": "^2.7",
         "frontpack/composer-assets-plugin": "^0.9",
+        "php-di/php-di": "^6.3",
+        "slim/psr7": "^1.4",
+        "slim/slim": "^4.7",
         "tkhamez/eve-sso": "^1.0",
-        "tkhamez/slim-role-auth": "1.0"
+        "tkhamez/slim-role-auth": "^3.0"
     },
     "config": {
         "assets-dir": "web/assets",

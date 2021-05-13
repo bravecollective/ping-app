@@ -9,7 +9,7 @@ use Slim\App;
 return function (ContainerInterface $container)
 {
     /** @var App $app */
-    $app = $container[App::class];
+    $app = $container->get(App::class);
 
     // SSO via sso-basics package
     $app->get('/', IndexController::class);
