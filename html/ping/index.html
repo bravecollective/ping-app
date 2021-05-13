@@ -49,16 +49,19 @@
 
                     <div class="form-group">
                         <label class="text-light" for="ping-index-group">Ping to group:</label>
-                        <select class="form-control bg-white" id="ping-index-group" name="group">{{groups}}</select>
+                        <select class="form-control bg-white" id="ping-index-group" name="group">
+                            <option value="">Please select a channel ...</option>
+                            {{groups}}
+                        </select>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Send Ping</button>
+                    <button id="button-submit" type="submit" class="btn btn-primary" disabled>Send Ping</button>
                 </div>
                 <div class="col col-lg-6">
                     <div class="form-group">
                         <label class="text-light" for="ping-index-text">Ping text:</label>
-                        <textarea id="ping-index-text" rows="10" name="text" class="form-control bg-white"
-                                  data-templates="{{templates}}"></textarea>
+                        <textarea id="ping-index-text" rows="15" name="text" class="form-control bg-white"
+                                  data-templates="{{templates}}" onkeyup="textOnChange()" disabled></textarea>
                     </div>
                 </div>
             </div>
@@ -89,20 +92,62 @@
             }
         }
 
-        function groupOnChange(event) {
-            const $template = window.$('#ping-index-text');
-            const data = $template.data('templates');
-            const selectedGroup = window.$(event.target).val();
-            let foundTemplate = false;
-            for (const configKey in data) {
-                if (data.hasOwnProperty(configKey) && configKey === selectedGroup) {
-                    foundTemplate = true;
-                    $template.val(data[configKey]);
-                    break;
+        let currentTemplateText = '';
+
+        function groupOnChange() {
+            const $pingText = window.$('#ping-index-text');
+            const $submitButton = window.$('#button-submit');
+            const data = $pingText.data('templates');
+            const selectedGroup = window.$('#ping-index-group').val();
+
+            // find new template
+            let newTemplateText = data['__default'];
+            if (selectedGroup === '') {
+                newTemplateText = 'Please select a channel first.';
+                $submitButton.prop('disabled', true);
+                $pingText.prop('disabled', true);
+            } else {
+                $pingText.prop('disabled', false);
+                for (const configKey in data) {
+                    if (data.hasOwnProperty(configKey) && configKey === selectedGroup) {
+                        newTemplateText = data[configKey];
+                        break;
+                    }
                 }
             }
-            if (!foundTemplate) {
-                $template.val(data['__default']);
+
+            // set new template text
+            const separator = "\n\n--- old text ---\n\n";
+            let currentText = $pingText.val();
+            let oldText = '';
+            if (currentText.indexOf(separator) !== -1) {
+                const split = currentText.split(separator);
+                currentText = split[0];
+                oldText = split[1];
+            }
+            if (currentText === currentTemplateText || currentText === '') {
+                if (oldText === '') {
+                    $pingText.val(newTemplateText);
+                } else {
+                    $pingText.val(newTemplateText + separator + oldText);
+                }
+            } else if (newTemplateText !== '' && currentText !== newTemplateText) {
+                $pingText.val(newTemplateText + separator + currentText);
+            }
+
+            currentTemplateText = newTemplateText;
+        }
+
+        function textOnChange() {
+            const $submitButton = window.$('#button-submit');
+            const $select = window.$('#ping-index-group');
+            if (
+                window.$('#ping-index-text').val() === currentTemplateText ||
+                $select.val() === ''
+            ) {
+                $submitButton.prop('disabled', true);
+            } else {
+                $submitButton.prop('disabled', false);
             }
         }
     </script>
