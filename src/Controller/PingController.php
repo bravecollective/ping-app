@@ -41,6 +41,7 @@ class PingController
         $serviceName = $this->settings['brave.serviceName'] ?? 'Brave Service';
 
         $pingGroups = $this->security->getAllowedPingGroups();
+        sort($pingGroups);
         $channelMap = $this->settings['channelMapping'];
 
         // read templates of allowed ping groups
