@@ -1,8 +1,10 @@
 <?php
+
 namespace Brave\PingApp;
 
-use Brave\NeucoreApi\Api\ApplicationApi;
+use Brave\NeucoreApi\Api\ApplicationGroupsApi;
 use Brave\NeucoreApi\ApiException;
+use Brave\Sso\Basics\EveAuthentication;
 use Brave\Sso\Basics\SessionHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Tkhamez\Slim\RoleAuth\RoleProviderInterface;
@@ -18,7 +20,7 @@ class RoleProvider implements RoleProviderInterface
     const ROLE_ANY = 'role:any';
 
     /**
-     * @var ApplicationApi
+     * @var ApplicationGroupsApi
      */
     private $api;
 
@@ -27,30 +29,25 @@ class RoleProvider implements RoleProviderInterface
      */
     private $session;
 
-    /**
-     * @param ApplicationApi $api
-     * @param SessionHandlerInterface $session
-     */
-    public function __construct(ApplicationApi $api, SessionHandlerInterface $session)
+    public function __construct(ApplicationGroupsApi $api, SessionHandlerInterface $session)
     {
         $this->api = $api;
         $this->session = $session;
     }
 
     /**
-     * @param ServerRequestInterface $request
      * @return string[]
      */
-    public function getRoles(ServerRequestInterface $request = null)
+    public function getRoles(ServerRequestInterface $request = null): array
     {
         $roles = [self::ROLE_ANY];
-        /* @var $eveAuth \Brave\Sso\Basics\EveAuthentication */
-        $eveAuth = $this->session->get('eveAuth', null);
+        /* @var $eveAuth EveAuthentication */
+        $eveAuth = $this->session->get('eveAuth');
         if ($eveAuth === null) {
             return $roles;
         }
         // try cache
-        $coreGroups = $this->session->get('coreGroups', null);
+        $coreGroups = $this->session->get('coreGroups');
         if (is_array($coreGroups) && $coreGroups['time'] > (time() - 60 * 60)) {
             return $coreGroups['roles'];
         }

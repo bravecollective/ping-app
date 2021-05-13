@@ -12,13 +12,11 @@
         <div class="row">
             <div class="col col-lg-6">
                 <h1 class="display-4 text-light">{{serviceName}}</h1>
-
             </div>
             <div class="col col-lg-6 text-right">
                 <a class="btn btn-warning" href="/logout">Logout</a>
             </div>
         </div>
-
 
         <div class="jumbotron mt-5 text-light bg-dark-4">
             <form action="/ping/send" method="post">
@@ -43,6 +41,7 @@
                 </div>
                 <div class="col col-lg-6">
                     <div class="form-group">
+                        <label class="text-light" for="ping-index-text">Ping text:</label>
                         <textarea id="ping-index-text" rows="10" name="text" class="form-control bg-white"
                                   data-templates="{{templates}}"></textarea>
                     </div>

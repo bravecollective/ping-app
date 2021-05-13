@@ -20,9 +20,9 @@ class IndexController
         $this->sessionData = $container->get(SessionHandlerInterface::class);
     }
 
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
-        if ($this->sessionData->get('eveAuth', null) instanceof EveAuthentication) {
+        if ($this->sessionData->get('eveAuth') instanceof EveAuthentication) {
             $redirect = '/ping/new';
         } else {
             $redirect = '/login';

@@ -1,17 +1,17 @@
 <?php
+/** @noinspection PhpUnused */
+
 namespace Brave\PingApp\Controller;
 
 use Brave\Sso\Basics\AuthenticationController as BasicAuthenticationController;
 use Brave\PingApp\RoleProvider;
 use Brave\PingApp\SessionHandler;
+use Exception;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Http\Response;
 
-/**
- *
- */
 class AuthenticationController extends BasicAuthenticationController
 {
     /**
@@ -31,11 +31,11 @@ class AuthenticationController extends BasicAuthenticationController
         $this->roleProvider = $this->container->get(RoleProvider::class);
     }
 
-    public function callback(ServerRequestInterface $request, Response $response, array $arguments): ResponseInterface
+    public function callback(ServerRequestInterface $request, Response $response): ResponseInterface
     {
         try {
             parent::auth($request, $response, false);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             error_log((string)$e);
         }
         $this->roleProvider->clear();
@@ -43,6 +43,7 @@ class AuthenticationController extends BasicAuthenticationController
         return $response->withRedirect('/ping/new');
     }
 
+    /** @noinspection PhpUnusedParameterInspection */
     public function logout(ServerRequestInterface $request, Response $response): ResponseInterface
     {
         $this->sessionHandler->clear();

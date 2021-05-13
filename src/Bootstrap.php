@@ -1,4 +1,5 @@
 <?php
+
 namespace Brave\PingApp;
 
 use Psr\Container\ContainerExceptionInterface;
@@ -9,9 +10,6 @@ use Slim\Middleware\Session;
 use Tkhamez\Slim\RoleAuth\RoleMiddleware;
 use Tkhamez\Slim\RoleAuth\SecureRouteMiddleware;
 
-/**
- *
- */
 class Bootstrap
 {
     /**
@@ -19,25 +17,21 @@ class Bootstrap
      */
     protected $container;
 
-    /**
-     * Bootstrap constructor
-     */
     public function __construct()
     {
         $container = new Container(require_once(ROOT_DIR . '/config/container.php'));
         $this->container = $container;
     }
 
-    public function getContainer()
+    public function getContainer(): ContainerInterface
     {
         return $this->container;
     }
 
     /**
-     * @return App
      * @throws ContainerExceptionInterface
      */
-    public function enableRoutes()
+    public function enableRoutes(): App
     {
         /** @var App $app */
         $routesConfigurator = require_once(ROOT_DIR . '/config/routes.php');

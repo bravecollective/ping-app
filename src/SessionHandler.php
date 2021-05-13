@@ -1,21 +1,14 @@
 <?php
+
 namespace Brave\PingApp;
 
 use Brave\Sso\Basics\SessionHandlerInterface;
+use Psr\Container\ContainerInterface;
 use SlimSession\Helper;
 
-/**
- *
- */
 class SessionHandler extends Helper implements SessionHandlerInterface
 {
-    /**
-     * SessionHandler constructor.
-     *
-     * @param \Psr\Container\ContainerInterface $container
-     */
-    public function __construct(\Psr\Container\ContainerInterface $container)
+    public function __construct(ContainerInterface $container)
     {
-
     }
 }

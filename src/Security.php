@@ -1,11 +1,10 @@
 <?php
+
 namespace Brave\PingApp;
 
+use Brave\Sso\Basics\EveAuthentication;
 use Brave\Sso\Basics\SessionHandlerInterface;
 
-/**
- *
- */
 class Security
 {
     /**
@@ -18,6 +17,9 @@ class Security
      */
     private $session;
 
+    /**
+     * @var array
+     */
     private $pingMapping;
 
     public function __construct(array $pingMapping, RoleProvider $roleProvider, SessionHandlerInterface $session)
@@ -27,7 +29,7 @@ class Security
         $this->session = $session;
     }
 
-    public function getAllowedPingGroups()
+    public function getAllowedPingGroups(): array
     {
         $coreGroups = $this->roleProvider->getRoles();
 
@@ -37,18 +39,14 @@ class Security
                 $pingGroups = array_merge($pingGroups, $this->pingMapping[$groupName]);
             }
         }
-        $pingGroups = array_unique($pingGroups);
 
-        return $pingGroups;
+        return array_unique($pingGroups);
     }
 
-    /**
-     * @return string
-     */
-    public function getAuthorizedName()
+    public function getAuthorizedName(): string
     {
-        /* @var $eveAuth \Brave\Sso\Basics\EveAuthentication */
-        $eveAuth = $this->session->get('eveAuth', null);
+        /* @var $eveAuth EveAuthentication */
+        $eveAuth = $this->session->get('eveAuth');
 
         return $eveAuth ? $eveAuth->getCharacterName() : '';
     }

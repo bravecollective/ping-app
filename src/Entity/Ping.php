@@ -1,5 +1,13 @@
 <?php
+
 namespace Brave\PingApp\Entity;
+
+use DateTime;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Table;
 
 /**
  * @Entity
@@ -17,7 +25,7 @@ class Ping
 
     /**
      * @Column(type="datetime", name="date_time")
-     * @var \DateTime
+     * @var DateTime
      */
     public $dateTime;
 
@@ -39,13 +47,13 @@ class Ping
      */
     public $character;
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
     public function __construct()
     {
-        $this->dateTime = new \DateTime();
+        $this->dateTime = new DateTime();
     }
 }

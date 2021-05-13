@@ -1,6 +1,6 @@
 <?php
 
-use Brave\NeucoreApi\Api\ApplicationApi;
+use Brave\NeucoreApi\Api\ApplicationGroupsApi;
 use Brave\PingApp\Entity\Ping;
 use Brave\PingApp\Repository\PingRepository;
 use Brave\PingApp\RoleProvider;
@@ -13,18 +13,17 @@ use League\OAuth2\Client\Provider\GenericProvider;
 use Psr\Container\ContainerInterface;
 use Slim\App;
 
+/** @noinspection PhpIncludeInspection */
 return [
     'settings' => isset($_SERVER['APP_CONFIG_FILEPATH']) ?
-        require_once($_SERVER['APP_CONFIG_FILEPATH']) :
-        require_once('config.php'),
+        require_once $_SERVER['APP_CONFIG_FILEPATH'] :
+        require_once 'config.php',
 
-    App::class => function (ContainerInterface $container)
-    {
+    App::class => function (ContainerInterface $container) {
         return new Slim\App($container);
     },
 
-    GenericProvider::class => function (ContainerInterface $container)
-    {
+    GenericProvider::class => function (ContainerInterface $container) {
         $settings = $container->get('settings');
 
         return new GenericProvider([
@@ -37,8 +36,7 @@ return [
         ]);
     },
 
-    AuthenticationProvider::class => function (ContainerInterface $container)
-    {
+    AuthenticationProvider::class => function (ContainerInterface $container) {
         $settings = $container->get('settings');
 
         return new AuthenticationProvider(
@@ -55,7 +53,7 @@ return [
         return $container->get(\Brave\PingApp\SessionHandler::class);
     },
 
-    ApplicationApi::class => function (ContainerInterface $container) {
+    ApplicationGroupsApi::class => function (ContainerInterface $container) {
         $apiKey = base64_encode(
             $container->get('settings')['CORE_APP_ID'] .
             ':'.
@@ -66,12 +64,12 @@ return [
         $config->setAccessToken($apiKey);
         $config->setApiKeyPrefix('Authorization', 'Bearer');
 
-        return new Brave\NeucoreApi\Api\ApplicationApi(null, $config);
+        return new Brave\NeucoreApi\Api\ApplicationGroupsApi(null, $config);
     },
 
     RoleProvider::class => function (ContainerInterface $container) {
         return new RoleProvider(
-            $container->get(ApplicationApi::class),
+            $container->get(ApplicationGroupsApi::class),
             $container->get(\Brave\Sso\Basics\SessionHandlerInterface::class)
         );
     },

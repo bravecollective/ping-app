@@ -1,5 +1,6 @@
 {
     "name": "bravecollective/ping-app",
+    "description": "",
     "type": "project",
     "autoload": {
         "psr-4": {
@@ -13,6 +14,7 @@
     }
     ],
     "require": {
+        "php": "^7.2",
         "ext-json": "*",
         "bravecollective/neucore-api": "^1.0",
         "bravecollective/sso-basics": "^3.0",

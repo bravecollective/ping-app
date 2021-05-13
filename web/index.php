@@ -1,8 +1,11 @@
 <?php
-require_once(__DIR__ . '/../vendor/autoload.php');
+
+use Brave\PingApp\Bootstrap;
+
+require_once __DIR__ . '/../vendor/autoload.php';
 
 define('ROOT_DIR', realpath(__DIR__ . '/../'));
 
-$bootstrap = new \Brave\PingApp\Bootstrap();
+$bootstrap = new Bootstrap();
 $app = $bootstrap->enableRoutes();
 $app->run();

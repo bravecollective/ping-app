@@ -4,8 +4,11 @@
  *
  * First route match will be used, matched by "starts-with"
  */
+
+use Brave\PingApp\RoleProvider;
+
 return [
-    '/login' => [\Brave\PingApp\RoleProvider::ROLE_ANY],
-    '/auth' => [\Brave\PingApp\RoleProvider::ROLE_ANY],
+    '/login' => [RoleProvider::ROLE_ANY],
+    '/auth' => [RoleProvider::ROLE_ANY],
     '/ping' => ['member', 'legacy-coalition'],
 ];

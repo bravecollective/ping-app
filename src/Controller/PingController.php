@@ -2,18 +2,18 @@
 namespace Brave\PingApp\Controller;
 
 use Brave\PingApp\Entity\Ping;
-use Brave\PingApp\Repository\PingRepository;
 use Brave\PingApp\Security;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-/**
- *
- */
 class PingController
 {
     /**
@@ -34,17 +34,12 @@ class PingController
         $this->security = $container->get(Security::class);
     }
 
-    /**
-     * Undocumented function
-     *
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @param array $arguments
-     * @return ResponseInterface
-     */
-    public function index(ServerRequestInterface $request, ResponseInterface $response, $arguments)
+    /** @noinspection PhpUnusedParameterInspection */
+    public function index(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
-        $serviceName = isset($this->container->get('settings')['brave.serviceName']) ? $this->container->get('settings')['brave.serviceName'] : 'Brave Service';
+        $serviceName = isset($this->container->get('settings')['brave.serviceName']) ?
+            $this->container->get('settings')['brave.serviceName'] :
+            'Brave Service';
 
         $allPingGroups = $this->security->getAllowedPingGroups();
         $channelMap = $this->container->get('settings')['channelMapping'];
@@ -65,14 +60,16 @@ class PingController
             htmlspecialchars(json_encode($this->container->get('settings')['templates'])),
         ], $templateCode);
 
-        return $response->getBody()->write($body);
+        $response->getBody()->write($body);
+        return $response;
     }
 
     /**
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
+     * @throws OptimisticLockException
+     * @throws ORMException
+     * @throws GuzzleException
      */
-    public function send(ServerRequestInterface $request, ResponseInterface $response)
+    public function send(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $characterName = $this->security->getAuthorizedName();
         $parsedBody = $request->getParsedBody();
@@ -94,9 +91,13 @@ class PingController
 
         $this->sendPingToSlack($ping);
 
-        return $response->withRedirect('/ping/new', 301);
+        return $response->withHeader('Location', '/ping/new')->withStatus(301);
     }
 
+    /**
+     * @throws GuzzleException
+     * @throws Exception
+     */
     private function sendPingToSlack(Ping $ping)
     {
         $url = $this->container->get('settings')['SLACKBOT_URL'];
@@ -109,22 +110,27 @@ class PingController
         ]);
     }
 
-    private function getPingMetadata(Ping $ping)
+    private function getPingMetadata(Ping $ping): string
     {
-        return "\n\n" . sprintf('> %s - %s TO %s', $ping->dateTime->format('Y-m-d H:i:s'), $ping->character, $ping->group);
+        return "\n\n" . sprintf(
+            '> %s - %s TO %s',
+            $ping->dateTime->format('Y-m-d H:i:s'),
+            $ping->character,
+            $ping->group
+        );
     }
 
     /**
      * @param $pingGroup
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
-    private function getPingChannel($pingGroup)
+    private function getPingChannel($pingGroup): string
     {
         $mapping = $this->container->get('settings')['channelMapping'];
 
         if (!isset($mapping[$pingGroup])) {
-            throw new \Exception('Could not map ping group to channel.');
+            throw new Exception('Could not map ping group to channel.');
         }
 
         return $mapping[$pingGroup];
