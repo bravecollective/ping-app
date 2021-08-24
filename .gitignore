@@ -1,13 +1,9 @@
-.env
+# app
 /vendor
 /web/assets
 /config/config.php
 /logs/*
 !/logs/.gitkeep
 
+# IDE
 /.idea
-
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
