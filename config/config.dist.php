@@ -11,7 +11,8 @@ return [
     'SSO_SCOPES' => '',
 
     // App
-    'brave.serviceName' => 'Brave Pings',
+    'app.serviceName' => 'Brave Pings',
+    'app.errorLog' => __DIR__ . '/../logs/error-' . date('Ym') . '.log', // set to empty string to use the system default
 
     // SLACKBOT access token - see https://your-name.slack.com/apps/A0F81R8ET-slackbot
     'SLACKBOT_URL' => 'https://your-name.slack.com/services/hooks/slackbot?token=ABC123',

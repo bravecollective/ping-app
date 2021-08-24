@@ -8,10 +8,10 @@
         }
     },
     "repositories": [
-    {
-        "type": "git",
-        "url": "https://github.com/bravecollective/web-ui.git"
-    }
+        {
+            "type": "git",
+            "url": "https://github.com/bravecollective/web-ui.git"
+        }
     ],
     "require": {
         "php": "^7.2",

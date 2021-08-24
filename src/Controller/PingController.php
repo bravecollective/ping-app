@@ -38,7 +38,7 @@ class PingController
     /** @noinspection PhpUnusedParameterInspection */
     public function index(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
-        $serviceName = $this->settings['brave.serviceName'] ?? 'Brave Service';
+        $serviceName = $this->settings['app.serviceName'] ?? 'Brave Service';
 
         $pingGroups = $this->security->getAllowedPingGroups();
         sort($pingGroups);

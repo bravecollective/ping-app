@@ -43,8 +43,8 @@ class AuthenticationController
         $this->sessionHandler = $container->get(Helper::class);
         $this->roleProvider = $container->get(RoleProvider::class);
         $this->authenticationProvider = $container->get(AuthenticationProvider::class);
-        $this->serviceName = isset($container->get('settings')['brave.serviceName']) ?
-            (string) $container->get('settings')['brave.serviceName'] :
+        $this->serviceName = isset($container->get('settings')['app.serviceName']) ?
+            (string) $container->get('settings')['app.serviceName'] :
             'Brave Service';
     }
 
@@ -83,10 +83,10 @@ class AuthenticationController
             return $response;
         }
 
-        $code = $queryParameters['code'];
-        $state = $queryParameters['state'];
+        $code = (string) $queryParameters['code'];
+        $state = (string) $queryParameters['state'];
 
-        $sessionState = $this->sessionHandler->get('ssoState');
+        $sessionState = (string) $this->sessionHandler->get('ssoState');
         $eveAuthentication = $this->authenticationProvider->validateAuthenticationV2($state, $sessionState, $code);
 
         $this->sessionHandler->set('ssoState', null);

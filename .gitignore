@@ -1,7 +1,9 @@
 .env
-vendor
-web/assets
-config/config.php
+/vendor
+/web/assets
+/config/config.php
+/logs/*
+!/logs/.gitkeep
 
 /.idea
 
